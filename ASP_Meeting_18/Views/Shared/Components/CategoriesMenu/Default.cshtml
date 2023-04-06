@@ -1,0 +1,21 @@
+﻿
+@model Tuple<List<string>,string?,PriceSearchViewModel>;
+<a asp-action="Index" 
+asp-controller="Home" 
+asp-route-category="All"
+   asp-route-Min="@(Model.Item3.SelectedMin==null?"0":Model.Item3.SelectedMin)"
+   asp-route-Max="@(Model.Item3.SelectedMax==null?Model.Item3.Max:Model.Item3.SelectedMax)"
+class="@(Model.Item2==null||Model.Item2=="All"? "btn btn-primary" : " btn btn-outline-primary")">All</a>
+@foreach(string category in Model.Item1)
+{
+	<div class="d-flex  list-group-item w-100 p-0">
+		<a asp-action="Index" 
+		asp-controller="Home" 
+		asp-route-category="@category"
+		asp-route-Min="@(Model.Item3.SelectedMin==null?"0":Model.Item3.SelectedMin)"
+		asp-route-Max="@(Model.Item3.SelectedMax==null?Model.Item3.Max:Model.Item3.SelectedMax)"
+		class=" @(category==Model.Item2 ? "btn btn-primary w-100" : " btn btn-outline-primary w-100")">@category</a>
+
+
+	</div>
+}

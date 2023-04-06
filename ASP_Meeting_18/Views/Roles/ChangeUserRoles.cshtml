@@ -1,0 +1,23 @@
+﻿
+@model ChangeRolesViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Change roles for user @Model.Username</h1>
+<form asp-action="ChangeUserRoles" method="post">
+    <input type="hidden" value="@Model.UserId" />
+    @foreach(var role in Model.AllRoles)
+    {
+        <input type="checkbox" 
+            @(Model.UserRoles.Contains(role.Name)?"Checked":"")
+            name="roles"
+            value="@role.Name"
+            />@role.Name<br />
+
+    }
+    <input type="submit" value="Save" class="btn btn-success"/>
+    <hr />
+    <a asp-action="UserList" asp-controller="Roles" class="btn btn-secondary">Back to list</a>
+</form>

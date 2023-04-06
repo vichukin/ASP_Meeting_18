@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ASP_Meeting_18.Data.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    int count = 0;
+    int cardid = 0;
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+    
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                Photo
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Id)
+            </td>
+                <td>
+                    @if(@item.Photos.Count==1)
+                    {
+                        <div style=" max-width:250px;  height: 250px">
+                            <img src="@item.Photos.FirstOrDefault().PhotoUrl" alt="@item.Title" class="w-100 h-100">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="@("carouselExample" + cardid)" class="carousel slide" style="max-width: 250px; height:250px;">
+                        <div class="carousel-inner">
+                            @foreach(var photo in item.Photos)
+                            {
+                                    <div class="@(count==0?"carousel-item active":"carousel-item") " style="max-width: 250px; height:250px;">
+                                <img src="@photo.PhotoUrl"
+                                 alt="Table Full of Spices"
+                                  class="w-100 h-100"/>
+                                </div>
+                                count++;
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@("carouselExample" + cardid)" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#@("carouselExample" + cardid)" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    
+                        count = 0;
+                        cardid++;
+                    
+                    }
+                </td>
+            <td>
+                <div class="btn-group">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary ">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger ">Delete</a>
+                    </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,60 @@
+﻿@model ASP_Meeting_18.Data.Category
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="catform">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParentCategoryId" class="control-label"></label>
+                <select asp-for="ParentCategoryId" class="form-control" asp-items="ViewBag.ParentCategoryId" onchange="getChildCategoriesAsync(event)">
+                    <option value="0">None</option>
+                </select>
+            </div>
+            <div id="forpaste"></div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" id="mybtn"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+
+</div>
+    
+<script type="text/javascript" href="lib/bootstrap/dist/js/bootstrap.js">
+    console.log("Hello");
+    async function getChildCategoriesAsync(e) {
+        let parentid = e.target.value;
+        console.log(parentid);
+        let resp = await fetch(`/categories/getChildCategories/${parentid}`, {
+            method: "POST"
+        });
+        if (resp.ok == true)
+            console.log(resp.status)
+        let htmlcontent = await resp.text();
+        //let div = document.getElementById("submitDiv");
+        //let catForm = document.getElementById("catform")
+        //let newdiv = document.createElement("div");
+        //newdiv.innerHTML = htmlcontent;
+        //newdiv.classList.add("form-group");
+        //catForm.insertBefore(newdiv, div);
+
+        let paste = document.getElementById("forpaste");
+        paste.innerHTML= htmlcontent;
+    }
+</script>

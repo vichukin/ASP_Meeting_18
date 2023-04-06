@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Category>;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    SelectList list = new SelectList(Model, "Id", "Title");
+}
+@*<select name="ParentCategoryId" class="form-select" asp-items="list"></select>*@
+<ul class="list-group">
+<label class="form-label">Childs of this category:</label>
+@foreach(var item in Model)
+{
+    <li class="list-group-item">@item.Title</li>
+}
+</ul>

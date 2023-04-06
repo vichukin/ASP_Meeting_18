@@ -1,0 +1,35 @@
+﻿
+@{
+}
+@model IEnumerable<Claim>
+<h2 class="badge bg-primary p-1 m-1 text-white">User claims</h2>
+<a asp-action="Create" asp-controller="Claims" class="btn btn-primary">Create new claim</a>
+<table class="table table-sm table-striped">
+	<thead>
+		<tr>
+			<th>Type</th>
+			<th>Value</th>
+			<th>ValueType</th>
+			<th>Issuer</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		
+			@foreach(var item in Model)
+			{
+				<tr>
+					<td>@item.Type</td>
+					<td>@item.Value</td>
+					<td>@item.ValueType</td>
+					<td>@item.Issuer</td>
+					<th>
+						<form asp-action="Delete" method="post">
+							<input type="hidden" name="claimsInfo" value="@item.Type;@item.Value;@item.ValueType">
+							<input type="submit" value="Delete" class="btn btn-danger">
+						</form>
+					</th>
+				</tr>
+			}
+	</tbody>
+</table>

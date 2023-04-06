@@ -1,0 +1,41 @@
+﻿@using ASP_Meeting_18.Models.ViewModels.HomeViewModels;
+@{
+    ViewData["Title"] = "Home Page";
+    int max;
+    int currentpage=1;
+}
+@model HomeIndexViewModel
+<div class="row">
+  <div class="col-3 list-group">
+      
+      @*<vc:categories-menu></vc:categories-menu>*@
+        @await Component.InvokeAsync("CategoriesMenu",new {CurrentCategory=Model.Category, Prices=Model.PriceSearch})
+        @await Component.InvokeAsync("PriceSlider",new {Prices=Model.PriceSearch})
+  </div>
+    
+  <div class="col-9">
+      <div class="container-fluid">
+          <div class="row row-cols-2"> 
+              @foreach(Product product in Model.Products )
+                {
+                    await Html.RenderPartialAsync("_ProductCard", product);
+                }
+            </div>
+      </div>
+      <nav aria-label="pagination-example" class="container-fluid">
+          <ul class="pagination">
+              @for(int i =1; i<=Model.PageCount;i++)
+                {
+                    currentpage = i;
+                    <li class="@(i==Model.Page ? "page-item active" : "page-item" )">
+                        <a  asp-route-page="@i"  
+                       asp-route-Min="@(Model.PriceSearch.SelectedMin==null?"0":Model.PriceSearch.SelectedMin)"
+                       asp-route-Max="@(Model.PriceSearch.SelectedMax==null?Model.PriceSearch.Max:Model.PriceSearch.SelectedMax)"
+
+                       class="page-link">@i</a>
+                    </li>
+                }
+            </ul>
+      </nav>
+  </div>
+</div>
