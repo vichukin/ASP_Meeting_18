@@ -118,7 +118,7 @@ namespace ASP_Meeting_18.Controllers
             Product? product = context.Products.Include(t=>t.Category).FirstOrDefault(t=>t.Id==id);
             CartItem item = await context.CartItems.Include(t=>t.Product).FirstOrDefaultAsync(t=>t.Id==cartitemId);
             StringBuilder sb = new StringBuilder();
-           string str = ("<h2>Congratulate you with your purchase</h2>"+product.ToString()+ "<br>Total price: "+ (item.Product.Price * item.Count).ToString()+"$");
+           string str = ("<h2>Congratulate you with your purchase!</h2>"+product.ToString()+ "<br>Total price: "+ (item.Product.Price * item.Count).ToString()+"$");
             email.Send("artuoh76@gmail.com", context.Users.FirstOrDefault(t => t.UserName == User.Identity.Name).Email, $"{product.Title}", str);
             if (product != null)
             {
