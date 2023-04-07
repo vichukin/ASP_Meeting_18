@@ -42,7 +42,7 @@ builder.Services.AddAuthentication().AddGoogle(options =>
 builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
-builder.Services.AddScoped(typeof(EmailService));
+builder.Services.AddSingleton(new EmailService(builder.Configuration));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -7,6 +7,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
+using System.Configuration;
 
 namespace ASP_Meeting_18.Models.Services
 {
@@ -17,9 +18,10 @@ namespace ASP_Meeting_18.Models.Services
 
     public class EmailService : IEmailService
     {
-
-        public EmailService()
+        public Microsoft.Extensions.Configuration.ConfigurationManager configuration { get; set; }
+        public EmailService(Microsoft.Extensions.Configuration.ConfigurationManager configuration)
         {
+            this.configuration = configuration;
         }
 
         public void Send(string from, string to, string subject, string html)
@@ -33,8 +35,9 @@ namespace ASP_Meeting_18.Models.Services
 
             // send email
             using var smtp = new SmtpClient();
+            string str = configuration.GetSection("Smtplog").Value.ToString();
             smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("artuoh76@gmail.com", "tmulvgwsekvkxryj");
+            smtp.Authenticate(configuration.GetSection("Smtplog").Value.ToString(), configuration.GetSection("Smtppass").Value.ToString());
             smtp.Send(email);
             smtp.Disconnect(true);
 
