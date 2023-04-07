@@ -8,7 +8,7 @@
             if (values["controller"] != null)
             {
                 string str = values["controller"].ToString().ToLower();
-                return str != "home" && str != "account";
+                return str != "home" && str != "account"&&str!="cart";
             }
             return false;
         }

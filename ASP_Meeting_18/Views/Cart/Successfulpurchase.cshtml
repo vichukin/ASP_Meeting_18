@@ -1,0 +1,8 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model string
+<h1>You have successfully purchased an item</h1>
+<a asp-action="Index" asp-controller="Cart" asp-route-returnUrl="@Model" class="btn btn-secondary">Back to cart</a>

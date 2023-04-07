@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ASP_Meeting_18.Models.DTO.UserDTOs;
+using ASP_Meeting_18.Models.Domain;
 
 namespace ASP_Meeting_18.Data
 {
@@ -9,6 +10,7 @@ namespace ASP_Meeting_18.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public ShopDBContext(DbContextOptions<ShopDBContext> options):base(options)
         {
             Database.EnsureCreated();

@@ -7,6 +7,9 @@ using System.Configuration;
 using ASP_Meeting_18.Infrastructure.ModelBinderProviders;
 using Microsoft.AspNetCore.Routing.Constraints;
 using ASP_Meeting_18.Models.RouteConstraints;
+using ASP_Meeting_18.Models.Services;
+using ASP_Meeting_18.Models.ClaimRequirements;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,10 @@ var configuration = builder.Configuration;
 builder.Services.AddControllersWithViews(options =>
 {
     options.ModelBinderProviders.Insert(0, new CartModelBinderProvider());
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminAndManagerOnly", policy => policy.Requirements.Add(new ClaimRequirement("Admin","Manager")));
 });
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ShopDBContext>();
@@ -32,16 +39,10 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     fbOptions.AppSecret = section.GetSection("AppSecret").Value;
 }
 );
-builder.Services.AddAuthorization(option =>
-{
-    option.AddPolicy("FrameworkPolicy", policy =>
-    {
-        policy.RequireClaim("PrefferedFramework", new[] { "ASP.NET Core" });
-        policy.RequireRole("admin", "manager");
-    });
-}); 
+builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
+builder.Services.AddScoped(typeof(EmailService));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -82,6 +83,11 @@ app.MapControllerRoute(
     pattern: "/Admin/{controller}/{action}",
     defaults: new {controller="Home",action="Index"},
     constraints: new {controller=new HomeControllerRouteConstraint() }
+);
+app.MapControllerRoute(
+    name: "Account",
+    pattern: "/Account/{controller}/{action}",
+    defaults: new { controller = "Home", action = "Index" }
 );
 app.MapControllerRoute(
     name: "Default",

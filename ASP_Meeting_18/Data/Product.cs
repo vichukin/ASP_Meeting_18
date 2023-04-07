@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ASP_Meeting_18.Models.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace ASP_Meeting_18.Data
 {
@@ -12,6 +14,14 @@ namespace ASP_Meeting_18.Data
         public int CategoryId { get; set; }
         public Category? Category { get; set; } = default!;
         public List<Photo>? Photos { get; set; } 
-
+        public List<CartItem>? CartItems { get; set; }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Title: {Title}<br>");
+            sb.AppendLine($"Category: {Category.Title}<br>");
+            sb.AppendLine($"Price: {Price}$");
+            return sb.ToString();
+        }
     }
 }

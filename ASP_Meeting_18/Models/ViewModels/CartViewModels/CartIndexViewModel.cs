@@ -4,7 +4,7 @@ namespace ASP_Meeting_18.Models.ViewModels.CartViewModels
 {
     public class CartIndexViewModel
     {
-        public Cart Cart { get; set; }
+        public List<CartItem> CartItems { get; set; }
         public string? returnUrl { get; set; }
     }
 }

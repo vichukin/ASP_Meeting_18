@@ -6,8 +6,8 @@
 @{
 }
 <h1>Change roles for user @Model.Username</h1>
-<form asp-action="ChangeUserRoles" method="post">
-    <input type="hidden" value="@Model.UserId" />
+<form asp-action="ChangeUserRoles" asp-controller="Roles" method="post">
+    <input name="id" type="hidden" value="@Model.UserId" />
     @foreach(var role in Model.AllRoles)
     {
         <input type="checkbox" 

@@ -1,4 +1,5 @@
 ﻿using ASP_Meeting_18.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_Meeting_18.Models.Domain
 {
@@ -6,9 +7,10 @@ namespace ASP_Meeting_18.Models.Domain
     {
         List<CartItem> cartItems= new List<CartItem>();
         public IEnumerable<CartItem> CartItems => cartItems;
-        public Cart()
+        public Cart(ShopDBContext context, string username)
         {
-            cartItems = new List<CartItem>();
+            var b = context.CartItems.Include(t=>t.Product).Include(t=>t.User).Where(t => t.Username == username).ToList();
+            cartItems = context.CartItems.Where(t=>t.Username==username).ToList();
         }
         public Cart(IEnumerable<CartItem> cartItems)
         {

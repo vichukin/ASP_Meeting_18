@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASP_Meeting_18.Data;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_Meeting_18.Controllers.Admin
 {
+    [Authorize(Policy = "AdminAndManagerOnly")]
     public class CategoriesController : Controller
     {
         private readonly ShopDBContext _context;

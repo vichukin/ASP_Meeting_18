@@ -1,13 +1,16 @@
 ﻿using ASP_Meeting_18.Data;
 using ASP_Meeting_18.Models.DTO.UserDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP_Meeting_18.Controllers.Admin
 {
+    [Authorize(Policy = "AdminAndManagerOnly")]
     public class UserController : Controller
     {
+
         public UserManager<User> manager { get; set; }
         public IActionResult Index()
         {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
-namespace ASP_Meeting_18.Controllers.Admin
+namespace ASP_Meeting_18.Controllers
 {
     public class AccountController : Controller
     {

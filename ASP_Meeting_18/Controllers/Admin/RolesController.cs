@@ -2,6 +2,7 @@
 using ASP_Meeting_18.Models.DTO.UserDTOs;
 using ASP_Meeting_18.Models.ViewModels.RolesViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ASP_Meeting_18.Controllers.Admin
 {
+    [Authorize(Policy = "AdminAndManagerOnly")]
     public class RolesController : Controller
     {
         public UserManager<User> manager { get; set; }
@@ -88,10 +90,10 @@ namespace ASP_Meeting_18.Controllers.Admin
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeUserRoles(string? Id, List<string> roles)
+        public async Task<IActionResult> ChangeUserRoles(string? id, List<string> roles)
         {
-            if (Id == null) return NotFound();
-            var user = await manager.FindByIdAsync(Id);
+            if (id == null) return NotFound();
+            var user = await manager.FindByIdAsync(id);
             if (user == null) return NotFound();
             var userroles = await manager.GetRolesAsync(user);
             var allroles = await roleManager.Roles.Select(t => t.Name).ToListAsync();
@@ -99,7 +101,7 @@ namespace ASP_Meeting_18.Controllers.Admin
             var deletedroles = userroles.Except(roles);
             await manager.AddToRolesAsync(user, addedroles);
             await manager.RemoveFromRolesAsync(user, deletedroles);
-            return RedirectToAction("UserList");
+            return RedirectToAction("UserList","Roles");
 
         }
         //public async Task<IActionResult> GetChildCategories(string? parentid)

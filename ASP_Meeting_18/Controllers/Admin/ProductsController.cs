@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASP_Meeting_18.Data;
 using ASP_Meeting_18.Models.ViewModels.ProductsViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_Meeting_18.Controllers.Admin
 {
+    [Authorize(Policy = "AdminAndManagerOnly")]
     public class ProductsController : Controller
     {
         private readonly ShopDBContext _context;
@@ -29,6 +31,7 @@ namespace ASP_Meeting_18.Controllers.Admin
         }
 
         // GET: Products/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Products == null)

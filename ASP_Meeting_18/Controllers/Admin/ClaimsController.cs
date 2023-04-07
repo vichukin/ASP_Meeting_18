@@ -16,7 +16,7 @@ namespace ASP_Meeting_18.Controllers.Admin
         }
         public IActionResult Index()
         {
-            return View(User?.Claims);
+            return View(User.Claims);
         }
         public IActionResult Create()
         {
@@ -54,7 +54,7 @@ namespace ASP_Meeting_18.Controllers.Admin
             User user = await manager.GetUserAsync(HttpContext.User);
             if (user == null) return RedirectToAction("Login", "Account");
             IEnumerable<Claim> claims = await manager.GetClaimsAsync(user);
-            Claim claimfordelete = claims.FirstOrDefault(t => t.Type == info[0] && t.Value == info[1] && t.ValueType == info[2]);
+            Claim claimfordelete = claims.FirstOrDefault(t => t.Type.ToString() == info[0].ToString() && t.Value.ToString() == info[1].ToString() && t.ValueType.ToString() == info[2].ToString());
             await manager.RemoveClaimAsync(user, claimfordelete);
             return RedirectToAction("Index");
         }

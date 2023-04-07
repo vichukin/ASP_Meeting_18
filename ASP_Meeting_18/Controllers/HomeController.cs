@@ -21,7 +21,9 @@ namespace ASP_Meeting_18.Controllers
         public async Task<IActionResult> Index(string? category,int? Min,int? Max, int page = 1)
         {
                 IQueryable<Product> products = context.Products.Include(t => t.Category).Include(t => t.Photos);
-                double maxprice = products.Max(t => t.Price);
+                double maxprice = 0;
+                if (products.Count() > 0)
+                     maxprice = products.Max(t => t.Price);
                 if (category != null&&category.ToString()!="All")
                     products = products.Where(t => t.Category!.Title == category);
                 if (Min != null)
