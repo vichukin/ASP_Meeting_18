@@ -10,6 +10,7 @@ using ASP_Meeting_18.Models.RouteConstraints;
 using ASP_Meeting_18.Models.Services;
 using ASP_Meeting_18.Models.ClaimRequirements;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,11 @@ builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddSingleton(new EmailService(builder.Configuration));
+builder.Services.AddAzureClients(clientBuilder =>
+{
+	clientBuilder.AddBlobServiceClient(builder.Configuration["AzureContainer:blob"], preferMsi: true);
+	clientBuilder.AddQueueServiceClient(builder.Configuration["AzureContainer:queue"], preferMsi: true);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -61,7 +67,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "CategoryPage",
-    pattern: "{category?}/{page}",
+    pattern: "{category?}/Page{page}",
     defaults: new { controller = "Home", action = "Index",page=1 },
     constraints: new { page = @"\d+" }
 );

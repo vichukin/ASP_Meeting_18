@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ASP_Meeting_18.Data;
 using ASP_Meeting_18.Models.ViewModels.ProductsViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Storage.Blobs;
 
 namespace ASP_Meeting_18.Controllers.Admin
 {
@@ -16,11 +17,16 @@ namespace ASP_Meeting_18.Controllers.Admin
     {
         private readonly ShopDBContext _context;
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
-
-        public ProductsController(ShopDBContext context, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+        BlobServiceClient blob;
+        BlobContainerClient container;
+        public ProductsController(ShopDBContext context, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, BlobServiceClient blob)
         {
             _context = context;
             Environment = environment;
+            this.blob = blob;
+            container = blob.GetBlobContainerClient("productphotos");
+            container.CreateIfNotExists();
+            container.SetAccessPolicy(Azure.Storage.Blobs.Models.PublicAccessType.BlobContainer);
         }
 
         // GET: Products
@@ -79,33 +85,22 @@ namespace ASP_Meeting_18.Controllers.Admin
                     //Закончить сохранение файла
                     foreach (var item in vm.Photos)
                     {
-                        string filename = $"/images/{item.FileName}";
-                        filename = $"/images/{Path.GetFileNameWithoutExtension(filename)}" + $"{Guid.NewGuid()}.{Path.GetExtension(filename)}";
-                        Photo ph = new Photo() { PhotoUrl = filename, Filename = item.FileName, Product = vm.Product, ProductId = vm.Product.Id };
-                        using (var file = new FileStream(Environment.WebRootPath + filename, FileMode.Create))
-                        {
-                            item.CopyTo(file);
-                            //ph.PhotoUrl = item.Name;
-                        }
-                        //try
-                        //{
+                        //before azure container
+						//string filename = $"/images/{item.FileName}";
+						//filename = $"/images/{Path.GetFileNameWithoutExtension(filename)}" + $"{Guid.NewGuid()}.{Path.GetExtension(filename)}";
+						//Photo ph = new Photo() { PhotoUrl = filename, Filename = item.FileName, Product = vm.Product, ProductId = vm.Product.Id };
+						//using (var file = new FileStream(Environment.WebRootPath + filename, FileMode.Create))
+						//{
+						//    item.CopyTo(file);
+						//    //ph.PhotoUrl = item.Name;
+						//}
 
-
-                        //    using (var file = new FileStream(ph.PhotoUrl, FileMode.CreateNew))
-                        //    {
-                        //        item.CopyTo(file);
-                        //        //ph.PhotoUrl = item.Name;
-                        //    }
-                        //}
-                        //catch(IOException ex)
-                        //{
-                        //    using (var file = new FileStream(ph.PhotoUrl+$"{count}", FileMode.CreateNew))
-                        //    {
-                        //        item.CopyTo(file);
-                        //        ph.PhotoUrl = item.Name;
-                        //    }
-                        //}
-                        photos.Add(ph);
+                        //after azure container
+						string filename = $"{Path.GetFileNameWithoutExtension(item.FileName)}{Guid.NewGuid()}.{Path.GetExtension(item.FileName)}";
+						BlobClient client = container.GetBlobClient(filename);
+                        await client.UploadAsync(item.OpenReadStream());
+						Photo ph = new Photo() { PhotoUrl = client.Uri.AbsoluteUri, Filename = filename, Product = vm.Product, ProductId = vm.Product.Id };
+						photos.Add(ph);
                         count++;
                     }
                 }
